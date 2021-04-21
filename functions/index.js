@@ -1,9 +1,20 @@
 const functions = require("firebase-functions");
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+const addUser = require("./addUser");
+// const addMessage = require("./addMessage");
+
+const admin = require("firebase-admin");
+admin.initializeApp();
+const db = admin.firestore();
+
+/*
+const app = require("./express-server/app");
+*/
+
+exports.addUser = functions.auth.user().onCreate((user) => {
+  const addUserResponse = addUser.handler(db, user);
+  console.log(">> addUserResponse", addUserResponse);
+  return addUserResponse;
+});
+
+// exports.addMessage = addMessage;
